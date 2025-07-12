@@ -1,37 +1,31 @@
-﻿using Microsoft.VisualBasic.ApplicationServices;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Window = System.Windows.Window;
+using System.Windows.Threading;
 
 namespace Dusty_Jukebox
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
+        private DispatcherTimer progressTimer;
+        private DispatcherTimer positionTimer;
         private bool isTrackLoaded = false;
         private bool isPlaying = false;
+        private bool isDraggingSlider = false;
+        private MediaFoundationReader currentReader;
 
         public MainWindow()
         {
@@ -42,24 +36,18 @@ namespace Dusty_Jukebox
             _analyse_btn.Click += Analyse_Click;
             Volume.ValueChanged += Volume_Changed;
             _open_btn.Click += Open_Click;
-        
-        LoadAudioFiles();
-        }
+            listBox.SelectionChanged += ListBox_SelectionChanged;
+            positionTimer = new DispatcherTimer();
+            positionTimer.Interval = TimeSpan.FromMilliseconds(500); // Update every second
+            positionTimer.Tick += PositionTimer_Tick;
 
-        private string GetSelectedFilePath()
-        {
-            string selectedFile = listBox.SelectedItem as string;
-            if (string.IsNullOrWhiteSpace(selectedFile))
-                return null;
 
-            string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
-            return File.Exists(fullPath) ? fullPath : null;
+            LoadAudioFiles();
         }
 
         private void LoadAudioFiles()
         {
-            string audioDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
-
+            string audioDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
             if (!Directory.Exists(audioDir))
                 Directory.CreateDirectory(audioDir);
 
@@ -67,58 +55,46 @@ namespace Dusty_Jukebox
                 .Where(f => f.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            listBox.ItemsSource = files.Select(System.IO.Path.GetFileName).ToList();
-            listBox.SelectionChanged += ListBox_SelectionChanged;
+            listBox.ItemsSource = files.Select(Path.GetFileName).ToList();
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selectedFile = listBox.SelectedItem as string;
-            if (string.IsNullOrWhiteSpace(selectedFile))
-                return;
-
-            string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
-            LoadTrack(fullPath);
-            Play_Click(null, null); // auto-play selected track
-
+            if (listBox.SelectedItem is string selectedFile)
+            {
+                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
+                LoadTrack(fullPath);
+                Play_Click(null, null);
+            }
         }
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
             {
                 Filter = "Audio Files (*.mp3;*.wav)|*.mp3;*.wav",
                 Multiselect = true,
-                Title = "Select an MP3 or WAV file"
+                Title = "Select Audio Files"
             };
 
             if (dialog.ShowDialog() == true)
             {
-                string selectedPath = dialog.FileName;
-                string fileName = System.IO.Path.GetFileName(selectedPath);
-                string targetDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
-                string targetPath = System.IO.Path.Combine(targetDir, fileName);
+                string targetDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
+                if (!Directory.Exists(targetDir))
+                    Directory.CreateDirectory(targetDir);
 
-                try
+                foreach (var selectedPath in dialog.FileNames)
                 {
-                    if (!Directory.Exists(targetDir))
-                        Directory.CreateDirectory(targetDir);
-
-                    // Copy file to Audio folder if it doesn't already exist
+                    string fileName = Path.GetFileName(selectedPath);
+                    string targetPath = Path.Combine(targetDir, fileName);
                     if (!File.Exists(targetPath))
                         File.Copy(selectedPath, targetPath);
-
-                    // Refresh the ListBox
-                    LoadAudioFiles();
-
-                    // Auto-select newly added file
-                    listBox.SelectedItem = fileName;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to load file: {ex.Message}");
-                }
+
+                LoadAudioFiles();
             }
         }
+
         private void LoadTrack(string path)
         {
             try
@@ -127,12 +103,21 @@ namespace Dusty_Jukebox
                 outputDevice?.Dispose();
                 audioFile?.Dispose();
 
-                var reader = new MediaFoundationReader(path);
+                audioFile = new AudioFileReader(path);
                 outputDevice = new WaveOutEvent();
-                outputDevice.Init(reader);
-                audioFile = null; // Reset audioFile to null to avoid memory leaks
+                outputDevice.Init(audioFile);
+
+                ProgressSlider.Maximum = audioFile.TotalTime.TotalSeconds;
+                ProgressSlider.Value = 0;
+                positionTimer.Start();
+
                 outputDevice.Volume = (float)Volume.Value;
-                outputDevice.PlaybackStopped += (s, e) => { isPlaying = false; };
+                outputDevice.PlaybackStopped += (s, e) =>
+                {
+                    isPlaying = false;
+
+                };
+
 
                 isTrackLoaded = true;
                 isPlaying = false;
@@ -157,6 +142,7 @@ namespace Dusty_Jukebox
                 {
                     outputDevice.Play();
                     isPlaying = true;
+//                    progressTimer.Start();
                 }
             }
             catch (Exception ex)
@@ -165,41 +151,60 @@ namespace Dusty_Jukebox
             }
         }
 
-
-
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
             if (outputDevice != null && isPlaying)
             {
                 outputDevice.Pause();
                 isPlaying = false;
+
             }
         }
 
+        private void PositionTimer_Tick(object sender, EventArgs e)
+        {
+            if (audioFile != null && !isDraggingSlider)
+            {
+                ProgressSlider.Value = audioFile.CurrentTime.TotalSeconds;
+            }
+        }
+
+        private void ProgressSlider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (audioFile != null)
+            {
+                audioFile.CurrentTime = TimeSpan.FromSeconds(ProgressSlider.Value);
+            }
+        }
+
+        private void ProgressSlider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            isDraggingSlider = true;
+        }
+
+        private void ProgressSlider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            isDraggingSlider = false;
+        }
 
         private void Volume_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            string filePath = GetSelectedFilePath();
-            if (filePath == null) return;
-
-            var reader = new MediaFoundationReader(filePath);
-            var volumeProvider = new VolumeWaveProvider16(reader) { Volume = (float)Volume.Value };
-            outputDevice = new WaveOutEvent();
-            outputDevice.Init(volumeProvider);
-
-
+            if (outputDevice != null)
+                outputDevice.Volume = (float)e.NewValue;
         }
 
+        
         private void Analyse_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = GetSelectedFilePath();
-            if (filePath == null)
+            if (listBox.SelectedItem is not string selectedFile)
             {
                 MessageBox.Show("No valid file selected!");
                 return;
             }
 
-            string pythonScript = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Python", "audio_analyser.py");
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
+            string pythonScript = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Python", "audio_analyser.py");
+
             if (!File.Exists(pythonScript))
             {
                 MessageBox.Show($"Python script not found at: {pythonScript}");
@@ -208,10 +213,9 @@ namespace Dusty_Jukebox
 
             try
             {
-                var psi = new System.Diagnostics.ProcessStartInfo
+                var psi = new ProcessStartInfo
                 {
-                    // Use the virtual environment's Python executable
-                    FileName = @"C:\Users\ahmed\source\repos\Dusty_Jukebox\Python\.venv\Scripts\python.exe", // Replace with actual path
+                    FileName = @"C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Python\\.venv\\Scripts\\python.exe",
                     Arguments = $"\"{pythonScript}\" \"{filePath}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -219,35 +223,40 @@ namespace Dusty_Jukebox
                     CreateNoWindow = true
                 };
 
-                using (var process = System.Diagnostics.Process.Start(psi))
+                using var process = Process.Start(psi);
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                if (!string.IsNullOrWhiteSpace(error))
                 {
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    process.WaitForExit();
+                    MessageBox.Show($"Error:\n{error}\nOutput:\n{output}");
+                    return;
+                }
 
-                    if (!string.IsNullOrWhiteSpace(error))
-                    {
-                        MessageBox.Show($"Error:\n{error}\nOutput:\n{output}");
-                        return;
-                    }
+                string bpm = "", key = "";
+                foreach (var line in output.Split('\n'))
+                {
+                    if (line.StartsWith("BPM:")) bpm = line.Replace("BPM:", "").Trim();
+                    if (line.StartsWith("KEY:")) key = line.Replace("KEY:", "").Trim();
+                }
 
-                    string bpm = "", key = "";
-                    foreach (var line in output.Split('\n'))
-                    {
-                        if (line.StartsWith("BPM:")) bpm = line.Replace("BPM:", "").Trim();
-                        if (line.StartsWith("KEY:")) key = line.Replace("KEY:", "").Trim();
-                    }
+                _bpm_display.Text = $"BPM: {bpm}";
+                _key_display.Text = $"Key: {key}";
 
-                    if (string.IsNullOrWhiteSpace(bpm) && string.IsNullOrWhiteSpace(key))
-                    {
-                        MessageBox.Show($"No analysis results found.\nOutput:\n{output}");
-                        return;
-                    }
-
-                    _bpm_display.Text = $"BPM: {bpm}";
-                    _key_display.Text = $"Key: {key}";
-
-                    //MessageBox.Show($"🎵 Analysis Complete\n\nBPM: {bpm}\nKey: {key}", "Analysis");
+                string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "waveform.png");
+                if (File.Exists(imgPath))
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(imgPath);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    waveformImage.Source = bitmap;
+                }
+                else
+                {
+                    MessageBox.Show($"Waveform image not found at: {imgPath}");
                 }
             }
             catch (Exception ex)
@@ -255,7 +264,5 @@ namespace Dusty_Jukebox
                 MessageBox.Show($"Exception: {ex.Message}\nStack Trace: {ex.StackTrace}");
             }
         }
-
     }
-    
 }

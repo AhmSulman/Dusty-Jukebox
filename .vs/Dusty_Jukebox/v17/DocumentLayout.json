@@ -13,6 +13,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\python\\audio_analyser.py||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:python\\audio_analyser.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,10 +46,47 @@
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml*",
-              "RelativeToolTip": "MainWindow.xaml*",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-07-04T14:25:24.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAnwJ8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T14:39:10.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\App.config",
+              "RelativeDocumentMoniker": "App.config",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\App.config",
+              "RelativeToolTip": "App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-07-10T21:47:17.817Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-07-10T21:25:16.133Z",
               "EditorCaption": ""
             },
             {
@@ -52,23 +97,9 @@
               "RelativeDocumentMoniker": "Python\\audio_analyser.py",
               "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Python\\audio_analyser.py",
               "RelativeToolTip": "Python\\audio_analyser.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-07-04T16:14:42.834Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs*",
-              "RelativeToolTip": "MainWindow.xaml.cs*",
-              "ViewState": "AgIAAOUAAAAAAAAAAAAowPcAAAA2AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T14:39:10.178Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-04T16:14:42.834Z"
             }
           ]
         }
