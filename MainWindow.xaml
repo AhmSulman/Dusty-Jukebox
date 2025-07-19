@@ -1,7 +1,8 @@
-﻿<Window x:Class="Dusty_Jukebox.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Dusty Jukebox" Height="450" Width="800"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="Dusty_Jukebox.MainWindow"
+        Title="Dusty Jukebox" Height="555" Width="956"
         FontFamily="Segoe UI" FontSize="14">
 
     <Grid Margin="16">
@@ -80,8 +81,14 @@
                 <Button x:Name="_open_btn"
                         Content="Open"
                         Width="75"/>
-            </StackPanel>
 
+            </StackPanel>
         </StackPanel>
+        
+        <ComboBox x:Name="output_devices" Grid.Column="1" Margin="421,320,21,164" SelectionChanged="output_devices_SelectionChanged"/>
+        
+        <Button x:Name="guitar_windows_btn_Click" Grid.Column="1" Content="Guitar Bud" Margin="10,454,422,20" Click="guitar_windows_btn_Click_1"/>
+
+
     </Grid>
 </Window>

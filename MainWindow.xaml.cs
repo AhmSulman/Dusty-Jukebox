@@ -11,21 +11,36 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using NAudio.CoreAudioApi;
+
 
 namespace Dusty_Jukebox
 {
+    public class AudioMetadata
+    {
+        public string FilePath { get; set; }
+        public double BPM { get; set; }
+        public string Key { get; set; }
+        public bool IsMinor { get; set; }
+        public DateTime LastModified { get; set; }
+    }
+
     public partial class MainWindow : Window
     {
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
-        private DispatcherTimer progressTimer;
         private DispatcherTimer positionTimer;
         private bool isTrackLoaded = false;
         private bool isPlaying = false;
         private bool isDraggingSlider = false;
-        private MediaFoundationReader currentReader;
+        
+
+        private Dictionary<string, AudioMetadata> metadataCache = new();
+        private string cacheFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "audio_metadata_cache.json");
+        private string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "last_folder.txt");
 
         public MainWindow()
         {
@@ -37,62 +52,119 @@ namespace Dusty_Jukebox
             Volume.ValueChanged += Volume_Changed;
             _open_btn.Click += Open_Click;
             listBox.SelectionChanged += ListBox_SelectionChanged;
-            positionTimer = new DispatcherTimer();
-            positionTimer.Interval = TimeSpan.FromMilliseconds(500); // Update every second
+
+            positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
             positionTimer.Tick += PositionTimer_Tick;
 
-
-            LoadAudioFiles();
+            LoadCache();
+            LoadLastUsedDirectory();
         }
 
-        private void LoadAudioFiles()
-        {
-            string audioDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
-            if (!Directory.Exists(audioDir))
-                Directory.CreateDirectory(audioDir);
+        public class AudioDevice {
+            public string Name { get; set; }
+            public int Index { get; set; }
 
-            var files = Directory.GetFiles(audioDir)
-                .Where(f => f.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            public override string ToString() => Name;
+
+
+        }
+
+        private void LoadCache()
+        {
+            if (File.Exists(cacheFilePath))
+            {
+                string json = File.ReadAllText(cacheFilePath);
+                metadataCache = JsonConvert.DeserializeObject<Dictionary<string, AudioMetadata>>(json) ?? new();
+            }
+        }
+
+        private void SaveCache()
+        {
+            string json = JsonConvert.SerializeObject(metadataCache, Formatting.Indented);
+            File.WriteAllText(cacheFilePath, json);
+        }
+
+        private void SaveLastUsedDirectory(string path)
+        {
+            File.WriteAllText(configFilePath, path);
+        }
+
+        private void LoadLastUsedDirectory()
+        {
+            if (File.Exists(configFilePath))
+            {
+                string folderPath = File.ReadAllText(configFilePath);
+                if (Directory.Exists(folderPath))
+                {
+                    LoadAudioFiles(folderPath);
+                }
+            }
+        }
+
+        private void LoadAudioFiles(string folderPath = null)
+        {
+            if (string.IsNullOrEmpty(folderPath))
+            {
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    return;
+                folderPath = dialog.SelectedPath;
+            }
+
+            SaveLastUsedDirectory(folderPath);
+
+            var files = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
+                                 .Where(f => f.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                                             f.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                                 .ToList();
 
             listBox.ItemsSource = files.Select(Path.GetFileName).ToList();
+
+            foreach (var file in files)
+            {
+                string absPath = Path.GetFullPath(file);
+                DateTime lastModified = File.GetLastWriteTimeUtc(absPath);
+
+                if (metadataCache.TryGetValue(absPath, out var metadata) && metadata.LastModified == lastModified)
+                {
+                    Debug.WriteLine($"Cached: {absPath} - BPM: {metadata.BPM} - Key: {metadata.Key}");
+                }
+                else
+                {
+                    (double bpm, string key) = AnalyseFileWithPython(absPath);
+
+                    metadataCache[absPath] = new AudioMetadata
+                    {
+                        FilePath = absPath,
+                        BPM = bpm,
+                        Key = key,
+                        IsMinor = key.ToLower().Contains("minor"),
+                        LastModified = lastModified
+                    };
+
+                    SaveCache();
+                }
+            }
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listBox.SelectedItem is string selectedFile)
             {
-                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
+                string fullPath = Path.Combine(GetCurrentFolder(), selectedFile);
                 LoadTrack(fullPath);
                 Play_Click(null, null);
             }
         }
 
+        private string GetCurrentFolder()
+        {
+            return File.Exists(configFilePath) ? File.ReadAllText(configFilePath) : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
+        }
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Audio Files (*.mp3;*.wav)|*.mp3;*.wav",
-                Multiselect = true,
-                Title = "Select Audio Files"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                string targetDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
-                if (!Directory.Exists(targetDir))
-                    Directory.CreateDirectory(targetDir);
-
-                foreach (var selectedPath in dialog.FileNames)
-                {
-                    string fileName = Path.GetFileName(selectedPath);
-                    string targetPath = Path.Combine(targetDir, fileName);
-                    if (!File.Exists(targetPath))
-                        File.Copy(selectedPath, targetPath);
-                }
-
-                LoadAudioFiles();
-            }
+            LoadAudioFiles();
         }
 
         private void LoadTrack(string path)
@@ -112,12 +184,7 @@ namespace Dusty_Jukebox
                 positionTimer.Start();
 
                 outputDevice.Volume = (float)Volume.Value;
-                outputDevice.PlaybackStopped += (s, e) =>
-                {
-                    isPlaying = false;
-
-                };
-
+                outputDevice.PlaybackStopped += (s, e) => { isPlaying = false; };
 
                 isTrackLoaded = true;
                 isPlaying = false;
@@ -142,7 +209,6 @@ namespace Dusty_Jukebox
                 {
                     outputDevice.Play();
                     isPlaying = true;
-//                    progressTimer.Start();
                 }
             }
             catch (Exception ex)
@@ -157,7 +223,6 @@ namespace Dusty_Jukebox
             {
                 outputDevice.Pause();
                 isPlaying = false;
-
             }
         }
 
@@ -193,56 +258,20 @@ namespace Dusty_Jukebox
                 outputDevice.Volume = (float)e.NewValue;
         }
 
-        
         private void Analyse_Click(object sender, RoutedEventArgs e)
         {
-            if (listBox.SelectedItem is not string selectedFile)
+            string filePath = GetSelectedFilePath();
+            if (filePath == null)
             {
                 MessageBox.Show("No valid file selected!");
                 return;
             }
 
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio", selectedFile);
-            string pythonScript = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Python", "audio_analyser.py");
-
-            if (!File.Exists(pythonScript))
+            if (metadataCache.TryGetValue(filePath, out var metadata))
             {
-                MessageBox.Show($"Python script not found at: {pythonScript}");
-                return;
-            }
-
-            try
-            {
-                var psi = new ProcessStartInfo
-                {
-                    FileName = @"C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Python\\.venv\\Scripts\\python.exe",
-                    Arguments = $"\"{pythonScript}\" \"{filePath}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                using var process = Process.Start(psi);
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                if (!string.IsNullOrWhiteSpace(error))
-                {
-                    MessageBox.Show($"Error:\n{error}\nOutput:\n{output}");
-                    return;
-                }
-
-                string bpm = "", key = "";
-                foreach (var line in output.Split('\n'))
-                {
-                    if (line.StartsWith("BPM:")) bpm = line.Replace("BPM:", "").Trim();
-                    if (line.StartsWith("KEY:")) key = line.Replace("KEY:", "").Trim();
-                }
-
-                _bpm_display.Text = $"BPM: {bpm}";
-                _key_display.Text = $"Key: {key}";
+                _bpm_display.Text = $"BPM: {metadata.BPM}";
+                _key_display.Text = metadata.IsMinor ? $"Key: {metadata.Key.Replace(" minor", "m", StringComparison.OrdinalIgnoreCase)}" : $"Key: {metadata.Key}";
+                _key_display.Foreground = metadata.IsMinor ? Brushes.MediumPurple : Brushes.DarkCyan;
 
                 string imgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "waveform.png");
                 if (File.Exists(imgPath))
@@ -259,10 +288,86 @@ namespace Dusty_Jukebox
                     MessageBox.Show($"Waveform image not found at: {imgPath}");
                 }
             }
+            else
+            {
+                MessageBox.Show("Metadata not found for the selected file. Please analyze the file first.");
+            }
+        }
+
+        private string GetSelectedFilePath()
+        {
+            if (listBox.SelectedItem is string fileName)
+            {
+                return Path.Combine(GetCurrentFolder(), fileName);
+            }
+            return null;
+        }
+
+        private (double bpm, string key) AnalyseFileWithPython(string filePath)
+        {
+            string pythonScript = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Python", "audio_analyser.py");
+            if (!File.Exists(pythonScript))
+            {
+                MessageBox.Show($"Python script not found at: {pythonScript}");
+                return (0, "Unknown");
+            }
+
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Python\\.venv\\Scripts\\python.exe",
+                    Arguments = $"\"{pythonScript}\" \"{filePath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using var process = Process.Start(psi);
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    MessageBox.Show($"Error:\n{error}\nOutput:\n{output}");
+                    return (0, "Unknown");
+                }
+
+                double bpm = 0;
+                string key = "Unknown";
+                foreach (var line in output.Split('\n'))
+                {
+                    if (line.StartsWith("BPM:")) bpm = double.Parse(line.Replace("BPM:", "").Trim());
+                    if (line.StartsWith("KEY:")) key = line.Replace("KEY:", "").Trim();
+                }
+
+                return (bpm, key);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"Exception: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return (0, "Unknown");
             }
+        }
+
+        private void output_devices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            List<AudioDevice> devices = new List<AudioDevice>();
+            for (int i =0; i < WaveOut.DeviceCount; i++) {                 
+                var capabilities = WaveOut.GetCapabilities(i);
+                devices.Add(new AudioDevice { Name = capabilities.ProductName, Index = i });
+            }
+            output_devices.ItemsSource = devices;
+            output_devices.SelectedIndex = 0; // Select the first device by default
+        }
+
+        private void guitar_windows_btn_Click_1(object sender, RoutedEventArgs e)
+        {
+            GuitarBud guitarBud = new GuitarBud();
+            guitarBud.Show();
+            this.Close();
         }
     }
 }
