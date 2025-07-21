@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\guitarbud.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:guitarbud.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\guitarbud.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:guitarbud.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,16 +11,24 @@
       "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\music.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:music.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\guitarbud.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:guitarbud.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\guitarbud.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:guitarbud.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\dusty_jukebox.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:dusty_jukebox.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\setup.bat||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|solutionrelative:setup.bat||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40309B67-D87B-4E6E-A1A6-A99D93B254BB}|Dusty_Jukebox.csproj|c:\\users\\ahmed\\source\\repos\\dusty_jukebox\\python\\audio_analyser.py||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -50,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,57 +62,45 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GuitarBud.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml.cs",
-              "RelativeDocumentMoniker": "GuitarBud.xaml.cs",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml.cs",
-              "RelativeToolTip": "GuitarBud.xaml.cs",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAAAHoAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Music.cs",
+              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Music.cs",
+              "RelativeDocumentMoniker": "Music.cs",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Music.cs",
+              "RelativeToolTip": "Music.cs",
+              "ViewState": "AgIAADMBAAAAAAAAAAAiwE4BAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-18T22:33:09.041Z",
+              "WhenOpened": "2025-07-21T17:30:27.96Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "GuitarBud.xaml",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml",
               "RelativeDocumentMoniker": "GuitarBud.xaml",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml*",
-              "RelativeToolTip": "GuitarBud.xaml*",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml",
+              "RelativeToolTip": "GuitarBud.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-07-12T17:52:30.029Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs",
-              "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAIwGABAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml.cs*",
+              "RelativeToolTip": "MainWindow.xaml.cs*",
+              "ViewState": "AgIAAFwBAAAAAAAAAAAAAHEBAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-04T14:39:10.178Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "setup.bat",
-              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\setup.bat",
-              "RelativeDocumentMoniker": "setup.bat",
-              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\setup.bat",
-              "RelativeToolTip": "setup.bat",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000614|",
-              "WhenOpened": "2025-07-12T16:03:57.135Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
@@ -124,7 +112,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Dusty_Jukebox.csproj",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\Dusty_Jukebox.csproj",
               "RelativeDocumentMoniker": "Dusty_Jukebox.csproj",
@@ -132,7 +120,8 @@
               "RelativeToolTip": "Dusty_Jukebox.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-07-18T22:53:01.381Z"
+              "WhenOpened": "2025-07-18T22:53:01.381Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -144,11 +133,12 @@
               "RelativeToolTip": "Python\\audio_analyser.py",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2025-07-04T16:14:42.834Z"
+              "WhenOpened": "2025-07-04T16:14:42.834Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\README.md",
               "RelativeDocumentMoniker": "README.md",
@@ -180,6 +170,40 @@
               "RelativeToolTip": "App.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-07-10T21:25:16.133Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "78a142e6-45b6-4eeb-b4aa-d58d2240b601",
+        "Display": 0,
+        "X": -5,
+        "Y": 45,
+        "Width": 1546,
+        "Height": 776,
+        "WindowState": 2
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GuitarBud.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml.cs",
+              "RelativeDocumentMoniker": "GuitarBud.xaml.cs",
+              "ToolTip": "C:\\Users\\ahmed\\source\\repos\\Dusty_Jukebox\\GuitarBud.xaml.cs",
+              "RelativeToolTip": "GuitarBud.xaml.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAWwDYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-18T22:33:09.041Z",
               "EditorCaption": ""
             }
           ]

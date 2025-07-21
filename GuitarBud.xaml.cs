@@ -3,19 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Dusty_Jukebox
 {
     public partial class GuitarBud : Window
     {
+
+
         public Dictionary<string, string[]> tunings = new Dictionary<string, string[]>
         {
             { "Standard", new[] { "E", "A", "D", "G", "B", "E" } },
             { "Drop D", new[] { "D", "A", "D", "G", "B", "E" } },
             { "Drop C", new[] { "C", "G", "C", "F", "A", "D" } }
         };
+
+        public Dictionary<string, string[]> alternateTunings = new Dictionary<string, string[]>
+        {
+            { "Open G", new[] { "D", "G", "D", "G", "B", "D" } },
+            { "Open D", new[] { "D", "A", "D", "F#", "A", "D" } },
+            { "Open C", new[] { "C", "G", "C", "E", "G", "C" } }
+        };
+
+        public Dictionary<string, string> noteFiles = new Dictionary<string, string>();
 
         public int frets = 22;
         public string[] currentTuning;
@@ -32,8 +47,6 @@ namespace Dusty_Jukebox
         public GuitarBud()
         {
             InitializeComponent();
-            TuningSelector.ItemsSource = tunings.Keys;
-            TuningSelector.SelectedItem = selectedTuning;
             currentTuning = tunings[selectedTuning];
             BuildFretboard();
         }
@@ -62,6 +75,12 @@ namespace Dusty_Jukebox
                     string fullNote = $"{noteNameFlat}{octave}";
 
                     string wavFile = Path.Combine(wavFolderPath, $"Piano.pp.{fullNote}.wav");
+
+                    if (!noteFiles.ContainsKey(fullNote))
+                    {
+                        noteFiles[fullNote] = wavFile;
+                    }
+
                     if (File.Exists(wavFile)) noteToWav[fullNote] = wavFile;
 
                     var btn = new Button
@@ -79,6 +98,27 @@ namespace Dusty_Jukebox
             }
         }
 
+        private void PlayMelodyButton_Click(object sender, RoutedEventArgs e)
+        {
+            string rawMelody = MelodyTextBox.Text;
+            string[] notes = rawMelody.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string note in notes)
+            {
+                string cleanedNote = note.Trim();
+                // PlayNote(cleanedNote); // WAV method here
+            }
+        }
+
+        private void AutoComposeButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Scale is A Minor: A B C D E F G
+            var scale = new List<string> { "A", "B", "C", "D", "E", "F", "G" };
+            var chordProgression = new List<string> { "Am", "Dm", "Em", "F", "G", "C", "Bdim" };
+
+            MelodyTextBox.Text = string.Join(" ", scale.Take(4)); // A B C D
+            ChordTextBox.Text = string.Join(" - ", chordProgression.Take(4)); // Am - Dm - Em - F
+        }
         private string ConvertToFlat(string note)
         {
             return note switch
@@ -135,8 +175,8 @@ namespace Dusty_Jukebox
 
         private void UpdateSelectedNotesDisplay()
         {
-            SelectedNotesDisplay.ItemsSource = null;
-            SelectedNotesDisplay.ItemsSource = selectedNotes;
+            //SelectedNotesDisplay.ItemsSource = null;
+            //SelectedNotesDisplay.ItemsSource = selectedNotes;
         }
 
         private void PlayMelody_Click(object sender, RoutedEventArgs e)
@@ -168,6 +208,22 @@ namespace Dusty_Jukebox
 
         }
 
+        private void TuningSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+//            if (TuningSelector.SelectedItem is string selected)
+  //          {
+    //            selectedTuning = selected;
+      //          currentTuning = tunings[selectedTuning];
+        //        BuildFretboard();
+          //  }
+        }
+
+        private void RefreshFretboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            BuildFretboard();
+        }
+
+        /* Uncomment if you want to use these selectors in the future
         private void ScaleSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -176,16 +232,7 @@ namespace Dusty_Jukebox
         private void ChordSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-        }
+        }*/
 
-        private void TuningSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (TuningSelector.SelectedItem is string selected)
-            {
-                selectedTuning = selected;
-                currentTuning = tunings[selectedTuning];
-                BuildFretboard();
-            }
-        }
     }
 }

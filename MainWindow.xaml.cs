@@ -367,7 +367,7 @@ namespace Dusty_Jukebox
         {
             GuitarBud guitarBud = new GuitarBud();
             guitarBud.Show();
-            this.Close();
+            
         }
     }
 }
